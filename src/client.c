@@ -5,7 +5,7 @@
 int main(void) 
 {
 	modbus_t *mb;
-	uint16_t tab_reg[64];
+	uint16_t tab_reg[256];
 	int rc;
 	int i;
 
@@ -20,20 +20,14 @@ int main(void)
     		return -1;
 	}
 
-	rc = modbus_write_register(mb, 1, 0x1234);
+	rc = modbus_write_register(mb, 5, 0x1234);
 	printf("rc = %d\n", rc);
-
-	for(;;)
+	rc = modbus_read_registers(mb, 0, 20, tab_reg);
+	printf("rc = %d\n", rc);
+	printf("DATA:\n");
+	for(i=0; i<rc; i++)
 	{
-		rc = modbus_read_registers(mb, 0, 1, tab_reg);
-		printf("rc = %d\n", rc);
-		printf("DATA:\n");
-		for(i=0; i<rc; i++)
-		{
-			printf("reg[%d] = %d\n", i, tab_reg[i]);
-		}
-		printf("Done\n");
-		sleep(2);
+		printf("reg[%d] = %d\n", i, tab_reg[i]);
 	}
 
 	modbus_close(mb);

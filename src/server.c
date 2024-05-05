@@ -20,15 +20,23 @@ int main(void)
 				0, 30,
 				0, 40);
 
+	for(int i=0; i<20; i++)
+	{
+		mb_mapping->tab_registers[i] =  2 * i + 1;
+	}
+
 	s = modbus_tcp_listen(mb, 1);
 	modbus_tcp_accept(mb, &s);
-	modbus_connect(mb);
+	//modbus_connect(mb);
 
-	do{
-		s = modbus_receive(mb, query);
-	} while(s == 0);
-	printf("Request recieved s=%d\n", s);
-	s = modbus_reply(mb, query, s, mb_mapping);
+	for(int i=0; i<2; i++)
+	{
+		do{
+			s = modbus_receive(mb, query);
+		} while(s == 0);
+		printf("Request recieved s=%d\n", s);
+		s = modbus_reply(mb, query, s, mb_mapping);
+	}
 
 	modbus_mapping_free(mb_mapping);
 	modbus_close(mb);
